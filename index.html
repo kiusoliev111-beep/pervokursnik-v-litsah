@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Фоторепортаж</title>
+<meta name="description" content="">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+<header class="top" id="top">
+  <a class="top__name" href="#top" data-text="projectTitle"></a>
+  <nav class="top__nav" aria-label="Навигация по странице">
+    <a href="#about">О событии</a>
+    <a href="#gallery">Фоторепортаж</a>
+    <a href="#author">Автор</a>
+  </nav>
+</header>
+
+<main>
+  <section class="cover" aria-labelledby="cover-title">
+    <div class="cover__bg" id="coverBg"></div>
+    <div class="cover__body">
+      <p class="cover__event"><span data-text="eventName"></span>, <time data-text="dateLabel"></time></p>
+      <h1 id="cover-title" data-text="projectTitle"></h1>
+      <p class="cover__author" data-text="photographer"></p>
+      <a class="btn btn--light" href="#gallery" id="scrollBtn">Смотреть фоторепортаж</a>
+    </div>
+  </section>
+
+  <section class="about" id="about">
+    <p class="about__text" data-text="description"></p>
+  </section>
+
+  <section class="gallery" id="gallery" aria-label="Фотографии">
+    <div class="grid" id="grid"></div>
+  </section>
+</main>
+
+<footer class="foot" id="author">
+  <p data-text="photographer"></p>
+  <p class="foot__sub"><span data-text="projectTitle"></span>, <span data-text="eventName"></span>, <span data-text="dateLabel"></span></p>
+</footer>
+
+<div class="lb" id="lb" role="dialog" aria-modal="true" aria-label="Просмотр фотографии" hidden>
+  <div class="lb__stage" id="lbStage">
+    <img class="lb__img" id="lbImg" alt="" draggable="false">
+  </div>
+  <button class="lb__btn lb__close" id="lbClose" aria-label="Закрыть">✕</button>
+  <button class="lb__btn lb__prev" id="lbPrev" aria-label="Предыдущее фото">‹</button>
+  <button class="lb__btn lb__next" id="lbNext" aria-label="Следующее фото">›</button>
+  <div class="lb__info">
+    <div class="lb__text">
+      <h2 id="lbTitle"></h2>
+      <p id="lbCaption"></p>
+      <p class="lb__count" id="lbCount"></p>
+    </div>
+    <div class="actions">
+      <button class="btn btn--light" id="lbEdited">Скачать обработанное фото</button>
+      <button class="btn btn--ghost" id="lbOriginal">Скачать оригинал</button>
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script src="assets/js/photos.js"></script>
+<script src="assets/js/main.js"></script>
+</body>
+</html>
