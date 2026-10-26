@@ -6,7 +6,9 @@
   /* Тексты из конфигурации */
   document.querySelectorAll("[data-text]").forEach(el => { el.textContent = c[el.dataset.text]; });
   document.title = c.projectTitle + " — " + c.eventName;
-  $('meta[name="description"]').content = c.description;
+  const paras = Array.isArray(c.description) ? c.description : [c.description];
+  paras.forEach(t => { const el = document.createElement("p"); el.textContent = t; $("#aboutText").appendChild(el); });
+  $('meta[name="description"]').content = paras[0].length > 160 ? paras[0].slice(0, 157).trim() + "…" : paras[0];
   $("time").setAttribute("datetime", c.dateISO);
 
   /* Заглушка (SVG), если файла нет */

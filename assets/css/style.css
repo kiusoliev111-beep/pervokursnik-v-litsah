@@ -36,7 +36,9 @@ a{color:inherit}
 .btn:disabled{opacity:.45;cursor:not-allowed}
 
 .about{max-width:var(--max);margin:0 auto;padding:clamp(56px,9vw,120px) var(--pad) clamp(32px,5vw,64px)}
-.about__text{margin:0;max-width:34em;font-family:var(--serif);font-size:clamp(1.25rem,2.6vw,1.9rem);line-height:1.45}
+.about__text{max-width:36em;font-family:var(--serif);font-size:clamp(1.05rem,1.5vw,1.25rem);line-height:1.65}
+.about__text p{margin:0 0 1.1em}
+.about__text p:first-child{font-size:clamp(1.3rem,2.6vw,1.9rem);line-height:1.4;margin-bottom:1.2em}
 
 .gallery{max-width:var(--max);margin:0 auto;padding:0 var(--pad) clamp(56px,9vw,120px)}
 .grid{display:grid;gap:clamp(24px,3vw,40px) clamp(14px,2vw,28px);grid-template-columns:repeat(4,minmax(0,1fr))}

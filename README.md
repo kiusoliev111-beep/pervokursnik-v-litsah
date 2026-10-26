@@ -23,7 +23,7 @@
 Перед публикацией выполните `python3 tools/check.py`: скрипт покажет, каких файлов из `photos.js` не хватает.
 
 ## 5–6. Названия, подписи, заголовок, описание
-Откройте `assets/js/photos.js`. В `siteConfig` меняются `projectTitle`, `eventName`, `dateLabel`, `description`, `photographer`. В массиве `photos` меняются `title`, `caption`, `alt` у каждого кадра. Название проекта хранится только в `projectTitle`.
+Откройте `assets/js/photos.js`. В `siteConfig` меняются `projectTitle`, `eventName`, `dateLabel`, `description` (список абзацев, каждая строка — отдельный абзац), `photographer`. В массиве `photos` меняются `title`, `caption`, `alt` у каждого кадра. Название проекта хранится только в `projectTitle`.
 
 ## 7. Одиннадцатая и следующие фотографии
 Положите файлы `11.jpg` в обе папки и добавьте в массив `photos` ещё одну запись по образцу предыдущих (`id: "photo-11"`, `number: "11"`). Карточки создаются автоматически. Чтобы удалить кадр, удалите его запись.
