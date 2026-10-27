@@ -6,7 +6,7 @@
 <script>document.documentElement.classList.add("js")</script>
 <title>Первокурсник в лицах — День первокурсника, 2026</title>
 <meta name="description" content="">
-<meta name="theme-color" content="#0d1013">
+<meta name="theme-color" content="#0b0e11">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Первокурсник в лицах">
 <meta property="og:description" content="Фоторепортаж с Дня первокурсника, 2026. Десять кадров. Фотограф Солиев Бехруз Баходурович.">
@@ -14,7 +14,7 @@
 <meta property="og:url" content="https://kiusoliev111-beep.github.io/pervokursnik-v-litsah/">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%230d1013'/%3E%3Ccircle cx='16' cy='16' r='8' fill='none' stroke='%23e8e4da' stroke-width='2.5'/%3E%3Ccircle cx='16' cy='16' r='2.5' fill='%23e8e4da'/%3E%3C/svg%3E">
-<link rel="stylesheet" href="assets/css/style.css">
+<link rel="stylesheet" href="assets/css/style.css?v=3">
 </head>
 <body>
 <header class="top" id="top">
@@ -40,30 +40,42 @@
   </section>
   <section class="about" id="about"><div class="about__text" id="aboutText"></div></section>
   <section class="gallery" id="gallery" aria-label="Фотографии"><div class="grid" id="grid"></div></section>
+<section class="getall" aria-label="Скачать все кадры">
+  <h2 class="getall__title">Скачать фоторепортаж</h2>
+  <p class="getall__text">Все кадры одним файлом.</p>
+  <div class="getall__btns">
+    <button class="btn btn--light btn--xl" id="dlEdited" type="button">Скачать обработанные фото<span class="btn__sub">ZIP, около 5 МБ</span></button>
+    <button class="btn btn--line btn--xl" id="dlOrig" type="button">Скачать исходники<span class="btn__sub">ZIP, RAW-файлы, около 470 МБ</span></button>
+  </div>
+</section>
 </main>
 <footer class="foot" id="author">
-  <p data-text="photographer"></p>
-  <p class="foot__sub"><span data-text="projectTitle"></span>, <span data-text="eventName"></span>, <span data-text="dateLabel"></span></p>
+  <div class="foot__in">
+    <div class="foot__col">
+      <p class="foot__label">Автор</p>
+      <p class="foot__name" data-text="photographer"></p>
+      <p class="foot__sub"><span data-text="projectTitle"></span>, <span data-text="eventName"></span>, <span data-text="dateLabel"></span></p>
+    </div>
+    <div class="foot__col" id="contacts" hidden>
+      <p class="foot__label">Обратная связь</p>
+      <div class="socials" id="socials"></div>
+    </div>
+  </div>
 </footer>
 <div class="lb" id="lb" role="dialog" aria-modal="true" aria-label="Просмотр фотографии" hidden>
   <div class="lb__stage" id="lbStage"><img class="lb__img" id="lbImg" alt="" draggable="false"></div>
   <div class="lb__tools">
     <button class="lb__pill" id="lbPlay" type="button" aria-pressed="false">Показ</button>
     <button class="lb__pill" id="lbCopy" type="button">Ссылка</button>
+    <button class="lb__pill" id="lbDl" type="button" aria-label="Скачать фото">Скачать</button>
   </div>
   <button class="lb__btn lb__close" id="lbClose" aria-label="Закрыть">✕</button>
   <button class="lb__btn lb__prev" id="lbPrev" aria-label="Предыдущее фото">‹</button>
   <button class="lb__btn lb__next" id="lbNext" aria-label="Следующее фото">›</button>
-  <div class="lb__info">
-    <div class="lb__text"><h2 id="lbTitle"></h2><p id="lbCaption"></p><p class="lb__count" id="lbCount"></p></div>
-    <div class="actions">
-      <button class="btn btn--light" id="lbEdited">Скачать обработанное фото</button>
-      <button class="btn btn--ghost" id="lbOriginal">Скачать оригинал</button>
-    </div>
-  </div>
+  <div class="lb__info"><div class="lb__text"><h2 id="lbTitle"></h2><p id="lbCaption"></p><p class="lb__count" id="lbCount"></p></div></div>
 </div>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
-<script src="assets/js/photos.js"></script>
-<script src="assets/js/main.js"></script>
+<script src="assets/js/photos.js?v=3"></script>
+<script src="assets/js/main.js?v=3"></script>
 </body>
 </html>

@@ -36,21 +36,21 @@
   let tt; const toast = m => { const t = $("#toast"); t.textContent = m; t.classList.add("on"); clearTimeout(tt); tt = setTimeout(() => t.classList.remove("on"), 3500); };
 
   /* Скачивание: сначала проверяем, что файл существует */
-  async function download(photo, kind, btn) {
-    const url = photo[kind], label = kind === "edited" ? "обработанное фото" : "оригинал";
+  async function download(url, name, btn, label) {
     try {
       const r = await fetch(url, { method: "HEAD", cache: "no-store" });
       if (!r.ok || (r.headers.get("content-type") || "").includes("text/html")) throw new Error("HTTP " + r.status);
     } catch (e) {
-      console.error(`Файл не найден (${label}, ${photo.id}): ${url}`, e);
-      toast(`Файл «${label}» для кадра ${photo.number} пока не добавлен.`);
+      console.error(`Файл не найден (${label}): ${url}`, e);
+      toast(`${label}: файл пока не добавлен.`);
       if (btn) { btn.disabled = true; btn.title = "Файл не добавлен"; }
       return;
     }
     const a = document.createElement("a");
-    a.href = url; a.download = fname(photo, kind);
+    a.href = url; a.download = name;
     document.body.appendChild(a); a.click(); a.remove();
   }
+  const dlPhoto = (p, btn) => download(p.edited, fname(p, "edited"), btn, `Кадр ${p.number}`);
 
   /* Галерея */
   const grid = $("#grid");
@@ -60,10 +60,11 @@
   photos.forEach((p, i) => {
     const fig = document.createElement("article");
     fig.className = "card";
+    const ARROW = '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11M7 11l5 5 5-5M5 20h14"/></svg>';
     fig.innerHTML =
-      `<button class="card__open"><span class="card__frame"><img loading="${i < 2 ? "eager" : "lazy"}" decoding="async" width="400" height="300"></span></button>` +
-      `<div class="card__meta"><h3><button class="card__title"></button></h3><p class="card__cap"></p>` +
-      `<div class="actions"><button class="btn btn--light" data-k="edited">Скачать обработанное фото</button><button class="btn btn--line" data-k="original">Скачать оригинал</button></div></div>`;
+      `<div class="card__media"><button class="card__open"><span class="card__frame"><img loading="${i < 2 ? "eager" : "lazy"}" decoding="async" width="400" height="300"></span></button>` +
+      `<button class="card__dl" type="button">${ARROW}</button></div>` +
+      `<div class="card__meta"><h3><button class="card__title"></button></h3><p class="card__cap"></p></div>`;
     const img = $("img", fig); let tried = false;
     img.alt = p.alt;
     img.onerror = () => {
@@ -78,7 +79,20 @@
     const open = () => openLb(i, $(".card__frame", fig));
     $(".card__open", fig).addEventListener("click", open);
     $(".card__title", fig).addEventListener("click", open);
-    fig.querySelectorAll("[data-k]").forEach(b => b.addEventListener("click", () => download(p, b.dataset.k, b)));
+    const dl = $(".card__dl", fig);
+    dl.setAttribute("aria-label", "Скачать фото: " + p.title); dl.title = "Скачать фото";
+    dl.addEventListener("click", () => dlPhoto(p, dl));
+    img.addEventListener("load", () => {   /* подсветка в цвет фотографии */
+      try {
+        const cv = document.createElement("canvas"); cv.width = cv.height = 8;
+        const x = cv.getContext("2d", { willReadFrequently: true }); x.drawImage(img, 0, 0, 8, 8);
+        const d = x.getImageData(0, 0, 8, 8).data; let r = 0, g = 0, b = 0;
+        for (let k = 0; k < d.length; k += 4) { r += d[k]; g += d[k + 1]; b += d[k + 2]; }
+        r /= 64; g /= 64; b /= 64;
+        const f = Math.min(2.4, 175 / Math.max(r, g, b, 1));
+        fig.style.setProperty("--glow", `rgba(${Math.min(255, r * f) | 0},${Math.min(255, g * f) | 0},${Math.min(255, b * f) | 0},.6)`);
+      } catch (e) { /* подсветка необязательна */ }
+    });
     grid.appendChild(fig);
     if (io) io.observe(fig); else fig.classList.add("in");
   });
@@ -108,7 +122,7 @@
     if (!reduce && lbImg.animate) lbImg.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 260 });
     $("#lbTitle").textContent = p.title; $("#lbCaption").textContent = p.caption;
     $("#lbCount").textContent = `${cur + 1} / ${N}`;
-    ["lbEdited", "lbOriginal"].forEach(id => { $("#" + id).disabled = false; $("#" + id).title = ""; });
+    $("#lbDl").disabled = false; $("#lbDl").title = "";
     [1, -1].forEach(d => { new Image().src = photos[(cur + d + N) % N].edited; });
     if (!lb.hidden) history.replaceState({ lb: 1 }, "", "#" + p.id);
     if (playing) play(true);
@@ -149,8 +163,7 @@
     try { await navigator.clipboard.writeText(location.href); toast("Ссылка на этот кадр скопирована"); }
     catch (e) { toast("Скопируйте адрес из строки браузера"); }
   };
-  $("#lbEdited").onclick = e => download(photos[cur], "edited", e.currentTarget);
-  $("#lbOriginal").onclick = e => download(photos[cur], "original", e.currentTarget);
+  $("#lbDl").onclick = e => dlPhoto(photos[cur], e.currentTarget);
   lbStage.addEventListener("click", e => { if (e.target === e.currentTarget) closeLb(); });
 
   document.addEventListener("keydown", e => {
@@ -198,6 +211,31 @@
     }
     t0 = null;
   });
+
+  /* Скачать все кадры архивом */
+  const dls = c.downloads || {};
+  $("#dlEdited").addEventListener("click", e => download(dls.edited, `${c.filePrefix}-edited.zip`, e.currentTarget, "Архив с обработанными фото"));
+  $("#dlOrig").addEventListener("click", () => {
+    if (!dls.originals) { toast("Архив с исходниками пока не добавлен."); return; }
+    const a = document.createElement("a"); a.href = dls.originals; a.target = "_blank"; a.rel = "noopener";
+    document.body.appendChild(a); a.click(); a.remove();
+  });
+
+  /* Обратная связь: значок показывается, только если ссылка заполнена в photos.js */
+  const ICON = {
+    vk: '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12.8 17.5C7.3 17.5 4.2 13.7 4.1 7.5h2.7c.1 4.6 2.1 6.5 3.7 6.9V7.5h2.6v4c1.6-.2 3.3-2 3.8-4h2.5c-.4 2.5-2.2 4.3-3.4 5 1.2.6 3.2 2.1 4 4.9h-2.8c-.6-1.9-2.1-3.3-4.1-3.5v3.6z"/></svg>',
+    telegram: '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M20.7 3.6 2.9 10.5c-.9.4-.9 1 0 1.3l4.5 1.4 1.7 5.2c.2.6.4.8.8.8.4 0 .6-.2.9-.5l2.2-2.1 4.5 3.3c.8.5 1.4.2 1.7-.8L22 5c.3-1.2-.4-1.8-1.3-1.4zM9.4 13.4l8.4-5.3-6.7 6.4-.3 3.2z"/></svg>',
+    max: '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="3" width="20" height="18" rx="6" fill="none" stroke="currentColor" stroke-width="2"/><text x="12" y="15.2" text-anchor="middle" font-size="8.5" font-weight="700" fill="currentColor" font-family="sans-serif">MAX</text></svg>'
+  };
+  const ct = c.contacts || {};
+  const href = (v, base) => !v ? "" : /^https?:\/\//i.test(v) ? v : base + v.replace(/^@/, "");
+  [["vk", "ВКонтакте", href(ct.vk, "https://vk.com/")], ["telegram", "Telegram", href(ct.telegram, "https://t.me/")], ["max", "MAX", href(ct.max, "")]]
+    .filter(x => x[2]).forEach(([k, label, url]) => {
+      const a = document.createElement("a");
+      a.className = "soc"; a.href = url; a.target = "_blank"; a.rel = "noopener"; a.setAttribute("aria-label", label);
+      a.innerHTML = ICON[k]; const sp = document.createElement("span"); sp.textContent = label; a.appendChild(sp);
+      $("#socials").appendChild(a); $("#contacts").hidden = false;
+    });
 
   /* Ссылка на конкретный кадр: …/#photo-03 */
   const startIdx = photos.findIndex(p => "#" + p.id === location.hash);
