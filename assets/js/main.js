@@ -225,11 +225,13 @@
   const ICON = {
     vk: '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12.8 17.5C7.3 17.5 4.2 13.7 4.1 7.5h2.7c.1 4.6 2.1 6.5 3.7 6.9V7.5h2.6v4c1.6-.2 3.3-2 3.8-4h2.5c-.4 2.5-2.2 4.3-3.4 5 1.2.6 3.2 2.1 4 4.9h-2.8c-.6-1.9-2.1-3.3-4.1-3.5v3.6z"/></svg>',
     telegram: '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M20.7 3.6 2.9 10.5c-.9.4-.9 1 0 1.3l4.5 1.4 1.7 5.2c.2.6.4.8.8.8.4 0 .6-.2.9-.5l2.2-2.1 4.5 3.3c.8.5 1.4.2 1.7-.8L22 5c.3-1.2-.4-1.8-1.3-1.4zM9.4 13.4l8.4-5.3-6.7 6.4-.3 3.2z"/></svg>',
+    phone: '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" d="M6.6 3.5 9 3l1.7 4.2-1.9 1.4a11 11 0 0 0 5.6 5.6l1.4-1.9L20 14l-.5 2.4a2.6 2.6 0 0 1-2.6 2.1C10.3 18.5 5.5 13.700 5.500 6.100a2.600 2.600 0 0 1 1.100-2.600z"/></svg>',
     max: '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="3" width="20" height="18" rx="6" fill="none" stroke="currentColor" stroke-width="2"/><text x="12" y="15.2" text-anchor="middle" font-size="8.5" font-weight="700" fill="currentColor" font-family="sans-serif">MAX</text></svg>'
   };
   const ct = c.contacts || {};
   const href = (v, base) => !v ? "" : /^https?:\/\//i.test(v) ? v : base + v.replace(/^@/, "");
-  [["vk", "ВКонтакте", href(ct.vk, "https://vk.com/")], ["telegram", "Telegram", href(ct.telegram, "https://t.me/")], ["max", "MAX", href(ct.max, "")]]
+  [["vk", "ВКонтакте", href(ct.vk, "https://vk.com/")], ["telegram", "Telegram", href(ct.telegram, "https://t.me/")], ["max", "MAX", href(ct.max, "")],
+   ["phone", ct.phone || "", ct.phone ? "tel:" + ct.phone.replace(/[^\d+]/g, "") : ""]]
     .filter(x => x[2]).forEach(([k, label, url]) => {
       const a = document.createElement("a");
       a.className = "soc"; a.href = url; a.target = "_blank"; a.rel = "noopener"; a.setAttribute("aria-label", label);

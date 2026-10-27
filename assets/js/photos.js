@@ -16,7 +16,7 @@ const siteConfig = {
     edited: "downloads/pervokursnik-v-licah-edited.zip",   // архив обработанных фото (лежит в репозитории)
     originals: "https://github.com/kiusoliev111-beep/pervokursnik-v-litsah/releases/download/originals/pervokursnik-v-licah-originals.zip"  // архив исходников (GitHub Releases)
   },
-  contacts: { vk: "", telegram: "", max: "" },   // ссылки или имена: пустые не показываются
+  contacts: { vk: "https://vk.ru/bekhruz_2004", telegram: "https://t.me/soliev_111", max: "", phone: "+7 901 337-76-85" },   // ссылки или имена: пустые не показываются
   filePrefix: "pervokursnik-v-licah"       // префикс имён скачиваемых файлов
 };
 
